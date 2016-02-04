@@ -1,0 +1,19 @@
+{
+    "name": "xelax90/l2p-client-module",
+    "description": "ZF2 integration for L2P Client",
+    "license": "BSD-2-Clause",
+    "authors": [
+        {
+            "name": "Aleksandr",
+            "email": "schurix@gmx.de"
+        }
+    ],
+    "require": {
+				"xelax90/l2p-client" : "*"
+    },
+		"autoload" : {
+				"psr-0": {
+						"L2PClientModule\\" : "src/"
+				}
+		}
+}
