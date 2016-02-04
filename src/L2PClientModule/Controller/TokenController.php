@@ -58,6 +58,7 @@ class TokenController extends AbstractActionController{
 			$result = array(
 				'success' => true,
 			);
+			$this->getEventManager()->trigger('l2p.authorized', $this);
 		}
 		return new JsonModel($result);
 	}
