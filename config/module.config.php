@@ -5,10 +5,52 @@ use Zend\ServiceManager\ServiceManager;
 use L2PClient\Config as L2PConfig;
 use L2PClient\Client as L2PClient;
 use L2PClient\Storage\StorageInterface as L2PStorage;
+use BjyAuthorize\Guard;
 
 return array(
 	'l2p_client' => array(
 		'client_id' => '',
+	),
+	
+	'controllers' => array(
+		'invokables' => array(
+			Controller\TokenController::class => Controller\TokenController::class,
+		),
+	),
+	
+	'router' => array(
+		'routes' => array(
+			'l2p' => array(
+				'type' => 'Literal',
+				'options' => array(
+					'route' => '/l2p',
+					'defaults' => array(
+						'controller' => Controller\TokenController::class,
+						'action'     => 'index',
+					),
+				),
+				'may_terminate' => false,
+				'child_routes' => array(
+					'authenticate' => array(
+						'type' => 'Literal',
+						'options' => array(
+							'route' => '/authenticate',
+							'defaults' => array(
+								'action'     => 'authorize',
+							),
+						),
+					)
+				)
+			)
+		),
+	),
+	
+	'bjyauthorize' => array(
+        'guards' => array(
+            Guard\Route::class => array(
+				'l2p/authenticate' => ['route' => 'l2p/authenticate',  'roles' => ['guest', 'user'] ],
+			),
+		),
 	),
 	
 	'service_manager' => array(
