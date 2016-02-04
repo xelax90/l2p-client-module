@@ -6,6 +6,7 @@ use L2PClient\Config as L2PConfig;
 use L2PClient\Client as L2PClient;
 use L2PClient\Storage\StorageInterface as L2PStorage;
 use BjyAuthorize\Guard;
+use L2PClient\Storage\ZendSessionStorage;
 
 return array(
 	'l2p_client' => array(
@@ -64,6 +65,7 @@ return array(
 			L2PConfig::class => Service\Config::class,
 			L2PClient::class => Service\Client::class,
 			L2PStorage::class => Service\SessionStorage::class,
+			ZendSessionStorage::class => Service\SessionStorage::class,
 		),
 	),
 );
