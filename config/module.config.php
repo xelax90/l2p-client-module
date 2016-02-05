@@ -40,6 +40,19 @@ return array(
 								'action'     => 'authorize',
 							),
 						),
+					),
+					'download' => array(
+						'type' => 'Segment',
+						'options' => array(
+							'route' => '/download/:cid/:downloadUrl',
+							'constraints' => array(
+								'cid' => '[0-9a-zA-Z-]+',
+								'downloadUrl' => '[0-9a-zA-Z_\.%/-]+',
+							),
+							'defaults' => array(
+								'action'     => 'downloadFile',
+							),
+						),
 					)
 				)
 			)
@@ -50,6 +63,7 @@ return array(
         'guards' => array(
             Guard\Route::class => array(
 				'l2p/authenticate' => ['route' => 'l2p/authenticate',  'roles' => ['guest', 'user'] ],
+				'l2p/download'     => ['route' => 'l2p/download',      'roles' => ['guest', 'user'] ],
 			),
 		),
 	),

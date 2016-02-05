@@ -23,6 +23,7 @@ namespace L2PClientModule\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use L2PClient\Client as L2PClient;
 use Zend\View\Model\JsonModel;
+use Zend\View\Model\ViewModel;
 
 /**
  * Description of TokenController
@@ -61,6 +62,33 @@ class TokenController extends AbstractActionController{
 			$this->getEventManager()->trigger('l2p.authorized', $this);
 		}
 		return new JsonModel($result);
+	}
+	
+	public function downloadFileAction(){
+		$client = $this->getClient();
+		
+		$cid = $this->getEvent()->getRouteMatch()->getParam('cid');
+		$downloadUrl = $this->getEvent()->getRouteMatch()->getParam('downloadUrl');
+		$filename = basename($downloadUrl);
+		
+		$result = $client->request('downloadFile/'.$filename, false, array(
+			'cid' => $cid,
+			'downloadUrl' => $downloadUrl,
+		));
+
+		/* @var $response \Zend\Http\Response */
+		$response = $this->getResponse();
+		if($result['code'] == 200){
+			$response->setStatusCode(200);
+			$response->getHeaders()->addHeaderLine('Content-Type: application/octet-stream');
+			$response->setContent($result['output']);
+		} else {
+			$response->setStatusCode($result['code']);
+			$error = json_decode($result['output']);
+			$response->setReasonPhrase($error['errorDescription']);
+		}
+		
+		return $response;
 	}
 	
 }
