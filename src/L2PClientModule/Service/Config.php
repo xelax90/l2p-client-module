@@ -24,6 +24,8 @@ use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use L2PClientModule\Options\L2PClientOptions;
 use L2PClient\Config as L2PConfig;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\AbstractPluginManager;
 
 /**
  * Factory for L2P Client Configuration
@@ -34,7 +36,7 @@ class Config implements FactoryInterface{
 	public function __invoke(ContainerInterface $container, $requestedName, array $options = null){
 		/* @var $clientOptions L2PClientOptions */
 		$clientOptions = $container->get(L2PClientOptions::class);
-		$storage = $container->get($options->getStorageService());
+		$storage = $container->get($clientOptions->getStorageService());
 		
 		$config = new $requestedName($storage, $clientOptions->getClientId(), $clientOptions->getAuthUrl(), $clientOptions->getApiUrl(), $clientOptions->getScope());
 		return $config;

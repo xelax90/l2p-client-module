@@ -23,6 +23,8 @@ namespace L2PClientModule\Service;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use L2PClient\Storage\ZendSessionStorage;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\AbstractPluginManager;
 
 /**
  * Creates an instance of L2PClient\Storage\ZendSessionStorage;
