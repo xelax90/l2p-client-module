@@ -31,11 +31,20 @@ use L2PClient\Config as L2PConfig;
  * @author schurix
  */
 class Config implements FactoryInterface{
-	public function createService(ServiceLocatorInterface $serviceLocator) {
-		/* @var $options L2PClientOptions */
-		$options = $serviceLocator->get(L2PClientOptions::class);
-		$storage = $serviceLocator->get($options->getStorageService());
-		$config = new L2PConfig($storage, $options->getClientId(), $options->getAuthUrl(), $options->getApiUrl(), $options->getScope());
+	public function __invoke(ContainerInterface $container, $requestedName, array $options = null){
+		/* @var $clientOptions L2PClientOptions */
+		$clientOptions = $container->get(L2PClientOptions::class);
+		$storage = $container->get($options->getStorageService());
+		
+		$config = new $requestedName($storage, $clientOptions->getClientId(), $clientOptions->getAuthUrl(), $clientOptions->getApiUrl(), $clientOptions->getScope());
 		return $config;
+	}
+	
+	public function createService(ServiceLocatorInterface $serviceLocator) {
+		$services = $serviceLocator;
+		if($services instanceof AbstractPluginManager){
+			$services = $services->getServiceLocator();
+		}
+		return $this($services, L2PConfig::class);
 	}
 }

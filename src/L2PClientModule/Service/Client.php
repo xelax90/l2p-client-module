@@ -24,6 +24,8 @@ use L2PClient\Client as L2PClient;
 use L2PClient\Config as L2PConfig;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\AbstractPluginManager;
 
 /**
  * L2P Client factory
@@ -31,8 +33,16 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  * @author schurix
  */
 class Client implements FactoryInterface{
+	public function __invoke(ContainerInterface $container, $requestedName, array $options = null){
+		$config = $container->get(L2PConfig::class);
+		return new $requestedName($config);
+	}
+	
 	public function createService(ServiceLocatorInterface $serviceLocator){
-		$config = $serviceLocator->get(L2PConfig::class);
-		return new L2PClient($config);
+		$services = $serviceLocator;
+		if($services instanceof AbstractPluginManager){
+			$services = $services->getServiceLocator();
+		}
+		return $this($services, L2PClient::class);
 	}
 }

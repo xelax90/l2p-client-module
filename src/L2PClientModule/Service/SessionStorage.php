@@ -30,8 +30,16 @@ use L2PClient\Storage\ZendSessionStorage;
  * @author schurix
  */
 class SessionStorage implements FactoryInterface{
-	public function createService(ServiceLocatorInterface $serviceLocator) {
-		$storage = new ZendSessionStorage();
+	public function __invoke(ContainerInterface $container, $requestedName, array $options = null){
+		$storage = new $requestedName();
 		return $storage;
+	}
+	
+	public function createService(ServiceLocatorInterface $serviceLocator) {
+		$services = $serviceLocator;
+		if($services instanceof AbstractPluginManager){
+			$services = $services->getServiceLocator();
+		}
+		return $this($services, ZendSessionStorage::class);
 	}
 }
